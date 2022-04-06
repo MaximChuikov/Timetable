@@ -14,7 +14,7 @@ import {
 	withAdaptivity,
 	usePlatform,
 	ViewWidth,
-	VKCOM, SplitLayout, Root, CellButton, Button, Text,
+	VKCOM, SplitLayout, Root, CellButton, Button, Text, Header,
 
 } from '@vkontakte/vkui';
 import {
@@ -22,91 +22,54 @@ import {
 	Icon28UserCircleOutline,
 	Icon56NewsfeedOutline
 } from '@vkontakte/icons';
+import ViewTimetable from "./ViewTimetable";
 
 
+
+const panels = {
+	today: 'today',
+	tomorrow: 'tomorrow',
+	week: 'week',
+};
 
 const Timetable = () => {
-	const [activeView, setActiveView] = React.useState("view1");
-	return(
-		<Epic activeStory={activeView}
-		tabbar={
-			<Tabbar style={{ position: "absolute", margin: "0 0 10px" }}>
-				<TabbarItem
-					selected={activeView === "view1"}
-					onClick={() => setActiveView("view1")}
-					text="Сегодня">
-					<Icon28CalendarOutline />
-				</TabbarItem>
+	const [activeView, setActiveView] = React.useState(panels.today);
+	const file = require('../server/database');
+	const times = file.toGive;
 
-				<TabbarItem
-					selected={activeView === "view2"}
-					onClick={() => setActiveView("view2")}
-					text="Завтра">
-					<Icon28CalendarOutline />
-				</TabbarItem>
-			</Tabbar>
-		}>
-			<View activePanel="panel1.1" id="view1">
-				<Panel id="panel1.1">
-					<PanelHeader>Сегодня</PanelHeader>
-					<Text weight={"semibold"}>Чилим че</Text>
-				</Panel>
-			</View>
-			<View header activePanel="panel2.1" id="view2">
-				<Panel id="panel2.1">
-					<PanelHeader>Завтра</PanelHeader>
-					<Text weight={"semibold"}>Чилим че</Text>
-				</Panel>
-			</View>
+	file.dummyBD(times.today);
+
+	return(
+		 <Epic activeStory={activeView}
+		 tabbar={
+		 	<Tabbar>
+		 		<TabbarItem
+		 			selected={activeView === panels.today}
+		 			onClick={() => setActiveView(panels.today)}
+		 			text="Сегодня">
+		 			<Icon28CalendarOutline />
+		 		</TabbarItem>
+
+		 		<TabbarItem
+		 			selected={activeView === panels.tomorrow}
+		 			onClick={() => setActiveView(panels.tomorrow)}
+		 			text="Завтра">
+		 			<Icon28CalendarOutline />
+		 		</TabbarItem>
+
+		 		<TabbarItem
+		 			selected={activeView === panels.week}
+		 			onClick={() => setActiveView(panels.week)}
+		 			text="Неделя">
+		 			<Icon28CalendarOutline />
+		 		</TabbarItem>
+		 	</Tabbar>
+		 }>
+		 	<Header>Расписание</Header>
+		 	<ViewTimetable id={panels.today} time={times.today}/>
+		 	<ViewTimetable id={panels.tomorrow} time={times.tomorrow}/>
+		 	<ViewTimetable id={panels.week} time={times.week}/>
 		</Epic>
 	)
 }
-
-
-// const queryParams = parseQueryString(window.location.search);
-// const hashParams = parseQueryString(window.location.hash);
-//
-// function parseQueryString (string) {
-// 	let a = string.slice(1).split('&')
-// 		.map((queryParam) => {
-// 			let kvp = queryParam.split('=');
-// 			return {key: kvp[0], value: kvp[1]}
-// 		})
-// 		.reduce((query, kvp) => {
-// 			query[kvp.key] = kvp.value;
-// 			return query
-// 		}, {})
-// 	console.log(a);
-// 	console.log(string);
-// 	return a;
-// };
-//
-// const Today = () => {
-// 	return (
-// 		<View activePanel="main">
-// 			<Panel id="main">
-// 				<PanelHeader>Launch params</PanelHeader>
-// 				<Group title="Query params">
-// 					<List>
-// 						{Object.keys(queryParams).map((key) => {
-// 							let value = queryParams[key];
-// 							return <Cell description={key}>{value ? value :
-// 								<span style={{color: 'red'}}>-</span>}</Cell>;
-// 						})}
-// 					</List>
-// 				</Group>
-//
-// 				<Group title="Hash params">
-// 					<List>
-// 						{Object.keys(hashParams).map((key) => {
-// 							let value = hashParams[key];
-// 							return <Cell description={key}>{value ? value :
-// 								<span style={{color: 'red'}}>-</span>}</Cell>;
-// 						})}
-// 					</List>
-// 				</Group>
-// 			</Panel>
-// 		</View>
-// 	);
-
 export default Timetable;
