@@ -1,13 +1,24 @@
 import React from 'react';
-import {Group, Header, Panel, PanelHeader, Text, View} from "@vkontakte/vkui";
+import {Cell, Group, Header, Panel, SimpleCell, Text, Textarea, View} from "@vkontakte/vkui";
 
 const database = require('../server/database');
 
-const ViewTimetable = ({time, ...props}) => {
+
+
+const ViewTimetable = ({time, panelId, ...props}) => {
     const arr = database.dummyBD(time);
     return(
         <View {...props}>
-            <h3>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab, ad aliquam atque cumque cupiditate deleniti dignissimos dolore doloribus, eaque fuga itaque laudantium magnam neque provident quam qui repellendus tempore ullam.</h3>
+            <Panel>
+                <h1>Расписание</h1>
+                <Group>
+                    {arr.map(x =>
+                        <SimpleCell before={x.pair} description={x.teacher}>
+                            {x.lesson}
+                        </SimpleCell>
+                    )}
+                </Group>
+            </Panel>
         </View>
     );
 };
