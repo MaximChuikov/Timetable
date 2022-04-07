@@ -2,26 +2,13 @@ import React from 'react';
 import {
 	Panel,
 	PanelHeader,
-	Group,
-	Cell,
 	View,
-	Epic,
 	Tabbar,
 	TabbarItem,
-	SplitCol,
-	Placeholder,
-	PanelHeaderBack,
-	withAdaptivity,
-	usePlatform,
-	ViewWidth,
-	VKCOM, SplitLayout, Root, CellButton, Button, Text, Header,
-
 } from '@vkontakte/vkui';
 import {
 	Icon28ArticleOutline, Icon28BillheadOutline,
-	Icon28CalendarOutline, Icon28MessageOutline, Icon28NewsfeedOutline, Icon28ServicesOutline,
-	Icon28UserCircleOutline,
-	Icon56NewsfeedOutline
+	Icon28CalendarOutline
 } from '@vkontakte/icons';
 import OneDayTimetable from "./OneDayTimetable";
 import DoubleWeekTimetable from "./DoubleWeekTimetable";

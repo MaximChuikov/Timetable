@@ -1,9 +1,9 @@
 import React from 'react';
-import {Card, CardGrid, Cell, Group, Header, Panel, SimpleCell, Text, Textarea, View} from "@vkontakte/vkui";
+import {Card, CardGrid, Cell, SimpleCell} from "@vkontakte/vkui";
 
 const database = require('../server/database');
 
-const OneDayTimetable = ({time = null, json = null, ...props}) => {
+const OneDayTimetable = ({time = null, json = null}) => {
     const arr = json == null ? database.dummyBD(time) : json;
     return(
         <CardGrid size={'l'}>
