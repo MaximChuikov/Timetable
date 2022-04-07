@@ -22,7 +22,8 @@ import {
 	Icon28UserCircleOutline,
 	Icon56NewsfeedOutline
 } from '@vkontakte/icons';
-import ViewTimetable from "./ViewTimetable";
+import OneDayTimetable from "./OneDayTimetable";
+import DoubleWeekTimetable from "./DoubleWeekTimetable";
 
 
 
@@ -33,43 +34,50 @@ const panels = {
 };
 
 const Timetable = () => {
-	const [activeView, setActiveView] = React.useState(panels.today);
+	const [activeTimetablePanel, setActiveTimetablePanel] = React.useState(panels.today);
 	const file = require('../server/database');
-	const times = file.toGive;
+	const times = file.timesToGet;
 
 	file.dummyBD(times.today);
 
 	return(
-		 <Epic activeStory={activeView}
-		 tabbar={
-		 	<Tabbar>
-		 		<TabbarItem
-		 			selected={activeView === panels.today}
-		 			onClick={() => setActiveView(panels.today)}
-		 			text="Сегодня">
-		 			<Icon28CalendarOutline />
-		 		</TabbarItem>
+		 <View activePanel={"main"}>
+			 <Panel id={"main"}>
 
-		 		<TabbarItem
-		 			selected={activeView === panels.tomorrow}
-		 			onClick={() => setActiveView(panels.tomorrow)}
-		 			text="Завтра">
-		 			<Icon28CalendarOutline />
-		 		</TabbarItem>
+				 <PanelHeader>Расписание</PanelHeader>
 
-		 		<TabbarItem
-		 			selected={activeView === panels.week}
-		 			onClick={() => setActiveView(panels.week)}
-		 			text="Неделя">
-		 			<Icon28CalendarOutline />
-		 		</TabbarItem>
-		 	</Tabbar>
-		 }>
-		 	<Header>Расписание</Header>
-		 	<ViewTimetable id={panels.today} time={times.today}/>
-		 	<ViewTimetable id={panels.tomorrow} time={times.tomorrow}/>
-		 	<ViewTimetable id={panels.week} time={times.week}/>
-		</Epic>
+				 {/*<Нижний таббар главной панели>*/}
+				 <Tabbar>
+					 <TabbarItem
+						 selected={activeTimetablePanel === panels.today}
+						 onClick={() => setActiveTimetablePanel(panels.today)}
+						 text="Сегодня">
+						 <Icon28CalendarOutline />
+					 </TabbarItem>
+
+					 <TabbarItem
+						 selected={activeTimetablePanel === panels.tomorrow}
+						 onClick={() => setActiveTimetablePanel(panels.tomorrow)}
+						 text="Завтра">
+						 <Icon28CalendarOutline />
+					 </TabbarItem>
+
+					 <TabbarItem
+						 selected={activeTimetablePanel === panels.week}
+						 onClick={() => setActiveTimetablePanel(panels.week)}
+						 text="Неделя">
+						 <Icon28CalendarOutline />
+					 </TabbarItem>
+				 </Tabbar>
+
+				 {/*<Панели основного контента>*/}
+				 <View activePanel={activeTimetablePanel}>
+					 <Panel id={panels.today}><OneDayTimetable time={times.today}/> </Panel>
+					 <OneDayTimetable id={panels.tomorrow} time={times.tomorrow}/>
+					 <DoubleWeekTimetable id={panels.week}/>
+				 </View>
+			 </Panel>
+		 </View>
 	)
 }
 export default Timetable;
