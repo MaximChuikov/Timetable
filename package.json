@@ -2,13 +2,14 @@
   "name": "timetable",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.js",
+  "homepage": "./",
+  "main": "index.js",
   "scripts": {
     "start": "cross-env PORT=10888 HTTPS=true react-scripts start",
     "build": "react-scripts build",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "homepage": "https://maximchuikov.github.io/Timetable/"
+    "deploy": "vk-miniapps-deploy"
   },
   "keywords": [],
   "author": "",
