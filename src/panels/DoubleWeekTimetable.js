@@ -49,7 +49,7 @@ const DoubleWeekTimetable = ({id, ...props}) => {
                 </TabsItem>
             </Tabs>
 
-            <View activePanel={activeWeek}>
+            <View activePanel={activeWeek} style={{paddingBottom: '48px'}}>
                 <Panel id={week.current}>
                     {database.dummyBD(times.currentWeek).map(x => <OneDayTimetable json={x}/>)}
                 </Panel>

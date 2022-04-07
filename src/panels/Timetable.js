@@ -18,6 +18,7 @@ import {
 
 } from '@vkontakte/vkui';
 import {
+	Icon28ArticleOutline, Icon28BillheadOutline,
 	Icon28CalendarOutline, Icon28MessageOutline, Icon28NewsfeedOutline, Icon28ServicesOutline,
 	Icon28UserCircleOutline,
 	Icon56NewsfeedOutline
@@ -52,21 +53,21 @@ const Timetable = () => {
 						 selected={activeTimetablePanel === panels.today}
 						 onClick={() => setActiveTimetablePanel(panels.today)}
 						 text="Сегодня">
-						 <Icon28CalendarOutline />
+						 <Icon28ArticleOutline/>
 					 </TabbarItem>
 
 					 <TabbarItem
 						 selected={activeTimetablePanel === panels.tomorrow}
 						 onClick={() => setActiveTimetablePanel(panels.tomorrow)}
 						 text="Завтра">
-						 <Icon28CalendarOutline />
+						 <Icon28BillheadOutline/>
 					 </TabbarItem>
 
 					 <TabbarItem
 						 selected={activeTimetablePanel === panels.week}
 						 onClick={() => setActiveTimetablePanel(panels.week)}
 						 text="Неделя">
-						 <Icon28CalendarOutline />
+						 <Icon28CalendarOutline/>
 					 </TabbarItem>
 				 </Tabbar>
 
