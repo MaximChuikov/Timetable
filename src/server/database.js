@@ -20,7 +20,7 @@ const daysOfWeek = [
 ]
 
 const getWeekTable = (week) => week == 1 ? timeTable.firstWeek : timeTable.secondWeek;
-const weekAfter = (day) => Math.floor(((day - 4) / 7 + new Date().getTime() / 604800000) % 2);
+const weekAfter = (day) => Math.floor(((day + 3) / 7 + new Date().getTime() / 604800000) % 2);
 const getWeekNumber = (week) => week == weeks.currentWeek ? weekAfter(0) + 1 : weekAfter(7) + 1;
 
 function todayDay (){
