@@ -1,23 +1,29 @@
 import React from 'react';
-import {Card, CardGrid, Cell, SimpleCell} from "@vkontakte/vkui";
+import {Card, CardGrid, Cell, Header, SimpleCell} from "@vkontakte/vkui";
 
-const database = require('../server/database');
-
-const OneDayTimetable = ({time = null, json = null}) => {
-    const arr = json == null ? database.dummyBD(time) : json;
-    return(
-        <CardGrid size={'l'}>
+const OneDayTimetable = ({json}, ...props) => {
+    return (
+        <CardGrid size={'l'} {...props}>
             <Card mode={'shadow'}>
-
-                    {arr.map(x =>
-                        <Cell
-                            before={<SimpleCell>{x.pair}</SimpleCell>}
-                            description={x.teacher}
-                            after={x.classroom}>
-                            {x.lesson}
+                <Header style={{marginLeft: '40.63px'}} mode={'tertiary'}>
+                    {json.day}
+                </Header>
+                {
+                    json.table.length !== 0 ?
+                        json.table.map(x =>
+                            <Cell disabled={true}
+                                  before={<SimpleCell disabled={true}>{x.pair}</SimpleCell>}
+                                  description={x.teacher}
+                                  after={x.classroom}
+                                  multiline={true}>
+                                {x.lesson}
+                            </Cell>)
+                        :
+                        <Cell style={{paddingLeft: '40.63px'}}
+                              disabled={true}>
+                            В этот день пар нет
                         </Cell>
-                    )}
-
+                }
             </Card>
         </CardGrid>
     );

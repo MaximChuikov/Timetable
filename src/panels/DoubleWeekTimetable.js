@@ -1,61 +1,58 @@
 import React from 'react';
 import {
-    Badge,
-    Cell,
     Counter,
-    Group,
-    Header,
     Panel,
-    SimpleCell,
     Tabs,
     TabsItem,
-    Text,
-    Textarea,
     View
 } from "@vkontakte/vkui";
 import OneDayTimetable from "./OneDayTimetable";
-import database from "../server/database";
 
-const week = {
-    current: "currentWeek",
-    other: "otherWeek"
-}
+const DoubleWeekTimetable = ({panelId, currId, otherId, jsonCurrent, jsonOther, ...props}) => {
+    const db = require('../server/database');
+    const [activeWeek, setActiveWeek] = React.useState(currId);
+    const weeks = db.weeks;
 
-
-const DoubleWeekTimetable = ({id, ...props}) => {
-    const database = require('../server/database');
-    const [activeWeek, setActiveWeek] = React.useState(week.current);
-    const times = database.timesToGet;
-
-    const current = database.getWeekNumber(times.currentWeek);
-    const other = database.getWeekNumber(times.otherWeek);
-    console.log(current, other);
-    return(
-        <Panel {...props} id={id}>
+    return (
+        <Panel {...props} id={panelId}
+               style={{paddingBottom: '16px'}}>
             <Tabs>
                 <TabsItem
-                    after={<Counter mode={'primary'}>{current}</Counter>}
-                    onClick={() => {setActiveWeek(week.current)}}
-                    selected={activeWeek === week.current}
+                    after={
+                        <Counter mode={'primary'}>
+                            {db.getWeekNumber(weeks.currentWeek)}
+                        </Counter>
+                    }
+                    onClick={() => {
+                        setActiveWeek(currId)
+                    }}
+                    selected={activeWeek === currId}
                 >
                     Текущая неделя
                 </TabsItem>
                 <TabsItem
-                    after={<Counter mode={'primary'}>{other}</Counter>}
-                    onClick={() => {setActiveWeek(week.other)}}
-                    selected={activeWeek === week.other}
+                    after={
+                        <Counter mode={'primary'}>
+                            {db.getWeekNumber(weeks.otherWeek)}
+                        </Counter>
+                    }
+                    onClick={() => {
+                        setActiveWeek(otherId)
+                    }}
+                    selected={activeWeek === otherId}
                 >
                     Другая неделя
                 </TabsItem>
             </Tabs>
 
-            <View activePanel={activeWeek} style={{paddingBottom: '48px'}}>
-                <Panel id={week.current}>
-                    {database.dummyBD(times.currentWeek).map(x => <OneDayTimetable json={x}/>)}
+            <View activePanel={activeWeek}
+                  style={{paddingBottom: '48px'}}>
+                <Panel id={currId}>
+                    {db.getWeek(weeks.currentWeek).map(x => <OneDayTimetable json={x}/>)}
                 </Panel>
 
-                <Panel id={week.other}>
-                    {database.dummyBD(times.otherWeek).map(x => <OneDayTimetable json={x}/>)}
+                <Panel id={otherId}>
+                    {db.getWeek(weeks.otherWeek).map(x => <OneDayTimetable json={x}/>)}
                 </Panel>
             </View>
         </Panel>
