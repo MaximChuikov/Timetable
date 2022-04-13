@@ -48,11 +48,11 @@ const DoubleWeekTimetable = ({panelId, currId, otherId, jsonCurrent, jsonOther, 
             <View activePanel={activeWeek}
                   style={{paddingBottom: '48px'}}>
                 <Panel id={currId}>
-                    {db.getWeek(weeks.currentWeek).map(x => <OneDayTimetable json={x}/>)}
+                    {jsonCurrent.map(x => <OneDayTimetable json={x}/>)}
                 </Panel>
 
                 <Panel id={otherId}>
-                    {db.getWeek(weeks.otherWeek).map(x => <OneDayTimetable json={x}/>)}
+                    {jsonOther.map(x => <OneDayTimetable json={x}/>)}
                 </Panel>
             </View>
         </Panel>
