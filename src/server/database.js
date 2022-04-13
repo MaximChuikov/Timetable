@@ -1,4 +1,5 @@
 import timeTable from './Weeks.json';
+import bells from './bells.json';
 
 const days = {
     today: "Today",
@@ -28,22 +29,37 @@ function todayDay (){
     return dayFromSunday - 1 == -1 ? 6 : dayFromSunday - 1;
 }
 
+function replaceTime(pair){
+    try{
+        pair.start = bells.bells[pair.pair - 1].start;
+        pair.end = bells.bells[pair.pair - 1].end;
+    } catch (e){
+        console.log(e);
+    }
+    return pair;
+}
+function replacePairBell(dayJson){
+    return dayJson.map(t => replaceTime(t));
+}
+
+
+
 function getDay(day){
     switch (day){
         case days.today:
             return {
-                table: getWeekTable(weekAfter(0))[todayDay()],
+                table: replacePairBell(getWeekTable(weekAfter(0))[todayDay()]),
                 day: daysOfWeek[todayDay()]
             };
         case days.tomorrow:
             return {
-                table: getWeekTable(weekAfter(1))[(todayDay() + 1) % 7],
+                table: replacePairBell(getWeekTable(weekAfter(1))[(todayDay() + 1) % 7]),
                 day: daysOfWeek[(todayDay() + 1) % 7]
             };
 
         default:
             console.log("Error in switch getDAY with \"" + day + "\" value");
-            return getWeekTable(weekAfter(0))[todayDay()];
+            return replacePairBell(getWeekTable(weekAfter(0))[todayDay()]);
     }
 }
 
@@ -51,7 +67,7 @@ function mergeWeekDays(weekTable){
     const arr = [daysOfWeek.length];
     for (let i = 0; i < daysOfWeek.length; i++){
         arr[i] = {
-            table: weekTable[i],
+            table: replacePairBell(weekTable[i]),
             day: daysOfWeek[i]
         }
     }
