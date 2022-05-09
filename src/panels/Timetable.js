@@ -1,14 +1,15 @@
 import React from 'react';
+import axios from "axios";
 import {
     Panel,
     PanelHeader,
     View,
     Tabbar,
-    TabbarItem,
+    TabbarItem, PanelHeaderEdit, PanelHeaderButton,
 } from '@vkontakte/vkui';
 import {
     Icon28ArticleOutline, Icon28BillheadOutline,
-    Icon28CalendarOutline
+    Icon28CalendarOutline, Icon28Settings
 } from '@vkontakte/icons';
 import OneDayTimetable from "./OneDayTimetable";
 import DoubleWeekTimetable from "./DoubleWeekTimetable";
@@ -18,18 +19,22 @@ const panels = {
     tomorrow: 'tomorrow',
     currentWeek: 'currWeek',
     otherWeek: 'otherWeek',
-    doubleWeek: 'doubleWeek'
+    doubleWeek: 'doubleWeek',
+
+    settings: 'settings',
+    editTable: 'edit'
 };
 
-const Timetable = () => {
+const Timetable = async ({userInfo}) => {
     const [activeTimetablePanel, setActiveTimetablePanel] = React.useState(panels.today);
     const db = require('../server/database');
+    console.log(userInfo);
 
     return (
         <View activePanel={"main"}>
             <Panel id={"main"}>
 
-                <PanelHeader>Расписание</PanelHeader>
+                <PanelHeader separator={false}>Расписание</PanelHeader>
 
                 {/*<Нижний таббар главной панели>*/}
                 <Tabbar>
@@ -58,10 +63,10 @@ const Timetable = () => {
                 {/*<Панели основного контента>*/}
                 <View activePanel={activeTimetablePanel}>
                     <Panel id={panels.today}>
-                        <OneDayTimetable json={db.getDay(db.days.today)}/>
+                        <OneDayTimetable json={await db.getDay(db.days.today)}/>
                     </Panel>
                     <Panel id={panels.tomorrow}>
-                        <OneDayTimetable json={db.getDay(db.days.tomorrow)}/>
+                        <OneDayTimetable json={await db.getDay(db.days.tomorrow)}/>
                     </Panel>
                     <Panel id={panels.week}>
                         <DoubleWeekTimetable jsonCurrent={db.getWeek(db.weeks.currentWeek)}

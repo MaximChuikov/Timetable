@@ -1,7 +1,9 @@
 import React from 'react';
 import {Card, CardGrid, Cell, Group, Header, SimpleCell, Text} from "@vkontakte/vkui";
+import axios from "axios";
 
 const OneDayTimetable = ({json}, ...props) => {
+    console.log("Мне пришло ", json);
     return (
         <CardGrid size={'l'} {...props}>
             <Card mode={'shadow'}>

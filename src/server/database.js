@@ -1,5 +1,8 @@
-import timeTable from './Weeks.json';
-import bells from './bells.json';
+import axios from "axios";
+
+const url = "http://localhost:8080/api/";
+const vkid = "222";
+
 
 const days = {
     today: "Today",
@@ -10,82 +13,54 @@ const weeks = {
     otherWeek: "OtherWeek"
 }
 
-const daysOfWeek = [
-    'Понедельник',
-    'Вторник',
-    'Среда',
-    'Четверг',
-    'Пятница',
-    'Суббота',
-    'Воскресенье'
-]
-
-const getWeekTable = (week) => week == 1 ? timeTable.firstWeek : timeTable.secondWeek;
-const weekAfter = (day) => Math.floor(((day + 3) / 7 + new Date().getTime() / 604800000) % 2);
 const getWeekNumber = (week) => week == weeks.currentWeek ? weekAfter(0) + 1 : weekAfter(7) + 1;
 
-function todayDay (){
-    const dayFromSunday = new Date().getDay();
-    return dayFromSunday - 1 == -1 ? 6 : dayFromSunday - 1;
-}
-
-function replaceTime(pair){
-    try{
-        pair.start = bells.bells[pair.pair - 1].start;
-        pair.end = bells.bells[pair.pair - 1].end;
-    } catch (e){
-        console.log(e);
-    }
-    return pair;
-}
-function replacePairBell(dayJson){
-    return dayJson.map(t => replaceTime(t));
-}
-
-
-
-function getDay(day){
-    switch (day){
+async function getDay(day) {
+    switch (day) {
         case days.today:
-            return {
-                table: replacePairBell(getWeekTable(weekAfter(0))[todayDay()]),
-                day: daysOfWeek[todayDay()]
-            };
+            await axios.get(url + "getTodayTimetable/" + vkid).then((res) => {
+                console.log(url + "getTodayTimetable/" + vkid, res.data);
+                return res.data;
+            }).catch((e) => {
+                console.error("ОШИБКА АКСИУС", e);
+            })
+            return null;
         case days.tomorrow:
-            return {
-                table: replacePairBell(getWeekTable(weekAfter(1))[(todayDay() + 1) % 7]),
-                day: daysOfWeek[(todayDay() + 1) % 7]
-            };
-
+            await axios.get(url + "getTomorrowTimetable/" + vkid).then((res) => {
+                return res.data;
+            }).catch((e) => {
+                console.error("ОШИБКА АКСИУС", e);
+            })
+            return null;
         default:
             console.log("Error in switch getDAY with \"" + day + "\" value");
-            return replacePairBell(getWeekTable(weekAfter(0))[todayDay()]);
+            return null;
     }
 }
 
-function mergeWeekDays(weekTable){
-    const arr = [daysOfWeek.length];
-    for (let i = 0; i < daysOfWeek.length; i++){
-        arr[i] = {
-            table: replacePairBell(weekTable[i]),
-            day: daysOfWeek[i]
-        }
-    }
-    return arr;
-}
-
-function getWeek(week){
-    switch (week){
+function getWeek(week) {
+    switch (week) {
         case weeks.currentWeek:
-            return mergeWeekDays(getWeekTable(weekAfter(0)));
+            axios.get(url + "getCurrentWeekTimetable/" + vkid).then((res) => {
+                return res.data;
+            }).catch((e) => {
+                console.error("ОШИБКА АКСИУС", e);
+                return null;
+            })
         case weeks.otherWeek:
-            return mergeWeekDays(getWeekTable(weekAfter(7)));
+            axios.get(url + "getOtherWeekTimetable/" + vkid).then((res) => {
+                return res.data;
+            }).catch((e) => {
+                console.error("ОШИБКА АКСИУС", e);
+                return null;
+            })
 
         default:
             console.log("Error in switch getWeek with \"" + week + "\" value");
-            return mergeWeekDays(getWeekTable(weekAfter(0)));
+            return null;
     }
 }
+
 export {
     days,
     weeks,
