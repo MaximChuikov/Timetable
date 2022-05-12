@@ -4,8 +4,6 @@ import bridge from "@vkontakte/vk-bridge";
 import App from "./App";
 
 // Init VK  Mini App
-bridge.send("VKWebAppInit")
+bridge.send("VKWebAppInit").then(r => r);
 ReactDOM.render(<App />, document.getElementById("root"));
-if (process.env.NODE_ENV === "development") {
-  import("./eruda").then(({ default: eruda }) => {}); //runtime download
-}
+

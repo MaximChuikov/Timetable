@@ -1,70 +1,43 @@
 import axios from "axios";
+const url = "https://maximchuikov.demlovesky.ru/api/";
 
-const url = "http://localhost:8080/api/";
-const vkid = "222";
-
-
-const days = {
-    today: "Today",
-    tomorrow: "Tomorrow",
+async function getToday(vk_id) {
+    await axios.get(url + "getToday/" + vk_id).then((res) => {
+        return res.data;
+    }).catch((e) => {
+        console.error("ОШИБКА АКСИУС", e);
+    })
+    return null;
 }
-const weeks = {
-    currentWeek: "CurrentWeek",
-    otherWeek: "OtherWeek"
+async function getTomorrow(vk_id){
+    await axios.get(url + "getDay/" + vk_id+'&1&4').then((res) => {
+        return res.data;
+    }).catch((e) => {
+        console.error("ОШИБКА АКСИУС", e);
+    })
+    return null;
 }
-
-const getWeekNumber = (week) => week == weeks.currentWeek ? weekAfter(0) + 1 : weekAfter(7) + 1;
-
-async function getDay(day) {
-    switch (day) {
-        case days.today:
-            await axios.get(url + "getTodayTimetable/" + vkid).then((res) => {
-                console.log(url + "getTodayTimetable/" + vkid, res.data);
-                return res.data;
-            }).catch((e) => {
-                console.error("ОШИБКА АКСИУС", e);
-            })
-            return null;
-        case days.tomorrow:
-            await axios.get(url + "getTomorrowTimetable/" + vkid).then((res) => {
-                return res.data;
-            }).catch((e) => {
-                console.error("ОШИБКА АКСИУС", e);
-            })
-            return null;
-        default:
-            console.log("Error in switch getDAY with \"" + day + "\" value");
-            return null;
-    }
+async function createUser(vk_id, subgroup_id){
+    axios.post(`${url}createStudent/${vk_id}&${subgroup_id}`).then(r => console.log(r));
 }
-
-function getWeek(week) {
-    switch (week) {
-        case weeks.currentWeek:
-            axios.get(url + "getCurrentWeekTimetable/" + vkid).then((res) => {
-                return res.data;
-            }).catch((e) => {
-                console.error("ОШИБКА АКСИУС", e);
-                return null;
-            })
-        case weeks.otherWeek:
-            axios.get(url + "getOtherWeekTimetable/" + vkid).then((res) => {
-                return res.data;
-            }).catch((e) => {
-                console.error("ОШИБКА АКСИУС", e);
-                return null;
-            })
-
-        default:
-            console.log("Error in switch getWeek with \"" + week + "\" value");
-            return null;
-    }
+function studentExists(vk_id){
+    return axios.get(url + "studentExists/" + vk_id).then(res => res.data.student_exists).catch(e => console.log(e));
 }
-
+function getFaculties(){
+    return axios.get(url + "getFaculties").then(res => res.data).catch(e => console.log(e));
+}
+function getGroups(faculty_id, course){
+    return axios.get(`${url}getGroups/${faculty_id}&${course}`).then(res => res.data).catch(e => console.log(e));
+}
+function getSubgroups(group_id){
+    return axios.get(url + "getSubgroups/" + group_id).then(res => res.data).catch(e => console.log(e));
+}
 export {
-    days,
-    weeks,
-    getWeekNumber,
-    getDay,
-    getWeek
+    getToday,
+    getTomorrow,
+    createUser,
+    studentExists,
+    getFaculties,
+    getGroups,
+    getSubgroups
 }

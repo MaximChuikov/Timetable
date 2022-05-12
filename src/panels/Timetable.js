@@ -1,18 +1,19 @@
-import React from 'react';
-import axios from "axios";
+import React, {useEffect, useState} from 'react';
+
+const db = require('../server/database');
 import {
     Panel,
     PanelHeader,
     View,
-    Tabbar,
-    TabbarItem, PanelHeaderEdit, PanelHeaderButton,
+    PanelHeaderButton,
+    ScreenSpinner
 } from '@vkontakte/vkui';
 import {
-    Icon28ArticleOutline, Icon28BillheadOutline,
-    Icon28CalendarOutline, Icon28Settings
+    Icon28MenuOutline
 } from '@vkontakte/icons';
 import OneDayTimetable from "./OneDayTimetable";
 import DoubleWeekTimetable from "./DoubleWeekTimetable";
+import Settings from "./Settings";
 
 const panels = {
     today: 'today',
@@ -25,59 +26,67 @@ const panels = {
     editTable: 'edit'
 };
 
-const Timetable = async ({userInfo}) => {
-    const [activeTimetablePanel, setActiveTimetablePanel] = React.useState(panels.today);
-    const db = require('../server/database');
-    console.log(userInfo);
+
+const Timetable = ({userInfo}) => {
+    // const [today, setToday] = useState(null);
+    // const [tomorrow, setTomorrow] = useState(null);
+    // const [week, setWeek] = useState(null);
+    const [studentExists, setStudentExists] = useState(null);
+    const [popout, setPopout] = useState(<ScreenSpinner size='medium'/>);
+    const vk_id = userInfo.id;
+
+    const MAIN_PANEL = "mainPanel";
+    const SETTINGS_PANEL = "settingsPanel"
+
+    const [currentPanel, setCurrentPanel] = useState(null);
+
+    useEffect(() => {
+        async function fetch() {
+            const student = await db.studentExists(vk_id).then(res => res);
+            setStudentExists(student);
+            setPopout(null);
+        }
+
+        fetch().then(r => r);
+    }, [])
 
     return (
-        <View activePanel={"main"}>
-            <Panel id={"main"}>
+        <>
+            {
+                studentExists == null ? <div/> :
+                    <View activePanel={studentExists === true ? MAIN_PANEL : SETTINGS_PANEL}>
+                        <Panel id={MAIN_PANEL}>
+                            <div>
+                                <PanelHeader
+                                    left={
+                                        <PanelHeaderButton>
+                                            <Icon28MenuOutline/>
+                                        </PanelHeaderButton>
+                                    }
+                                    visor={true}
+                                >Расписание
+                                </PanelHeader>
+                            </div>
+                            <div>
+                                govno
+                            </div>
+                        </Panel>
 
-                <PanelHeader separator={false}>Расписание</PanelHeader>
 
-                {/*<Нижний таббар главной панели>*/}
-                <Tabbar>
-                    <TabbarItem
-                        selected={activeTimetablePanel === panels.today}
-                        onClick={() => setActiveTimetablePanel(panels.today)}
-                        text="Сегодня">
-                        <Icon28ArticleOutline/>
-                    </TabbarItem>
+                        <Panel id={SETTINGS_PANEL}>
+                            <Settings vk_id={vk_id}
+                                      haveBackButton={studentExists}
+                                      exitFunc={() => {
+                                          setStudentExists(true);
+                                          setCurrentPanel(MAIN_PANEL);
+                                      }}
+                            />
+                        </Panel>
+                    </View>
+            }
+        </>
 
-                    <TabbarItem
-                        selected={activeTimetablePanel === panels.tomorrow}
-                        onClick={() => setActiveTimetablePanel(panels.tomorrow)}
-                        text="Завтра">
-                        <Icon28BillheadOutline/>
-                    </TabbarItem>
 
-                    <TabbarItem
-                        selected={activeTimetablePanel === panels.week}
-                        onClick={() => setActiveTimetablePanel(panels.week)}
-                        text="Неделя">
-                        <Icon28CalendarOutline/>
-                    </TabbarItem>
-                </Tabbar>
-
-                {/*<Панели основного контента>*/}
-                <View activePanel={activeTimetablePanel}>
-                    <Panel id={panels.today}>
-                        <OneDayTimetable json={await db.getDay(db.days.today)}/>
-                    </Panel>
-                    <Panel id={panels.tomorrow}>
-                        <OneDayTimetable json={await db.getDay(db.days.tomorrow)}/>
-                    </Panel>
-                    <Panel id={panels.week}>
-                        <DoubleWeekTimetable jsonCurrent={db.getWeek(db.weeks.currentWeek)}
-                                             jsonOther={db.getWeek(db.weeks.otherWeek)}
-                                             panelId={panels.doubleWeek}
-                                             currId={panels.currentWeek}
-                                             otherId={panels.otherWeek}/>
-                    </Panel>
-                </View>
-            </Panel>
-        </View>
     )
 }
 export default Timetable;
