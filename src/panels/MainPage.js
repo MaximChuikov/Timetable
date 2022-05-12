@@ -5,34 +5,18 @@ import {
     Panel,
     PanelHeader,
     View,
-    PanelHeaderButton,
-    ScreenSpinner
+    PanelHeaderButton
 } from '@vkontakte/vkui';
 import {
     Icon28MenuOutline
 } from '@vkontakte/icons';
-import OneDayTimetable from "./TimetableRender/OneDayTimetable";
-import DoubleWeekTimetable from "./TimetableRender/DoubleWeekTimetable";
+
 import Settings from "./Settings";
+import TimetableRenderer from "./TimetableRenderer";
 
-const panels = {
-    today: 'today',
-    tomorrow: 'tomorrow',
-    currentWeek: 'currWeek',
-    otherWeek: 'otherWeek',
-    doubleWeek: 'doubleWeek',
+const MainPage = ({userInfo}) => {
 
-    settings: 'settings',
-    editTable: 'edit'
-};
-
-
-const Timetable = ({userInfo}) => {
-    // const [today, setToday] = useState(null);
-    // const [tomorrow, setTomorrow] = useState(null);
-    // const [week, setWeek] = useState(null);
     const [studentExists, setStudentExists] = useState(null);
-    const [popout, setPopout] = useState(<ScreenSpinner size='medium'/>);
     const vk_id = userInfo.id;
 
     const MAIN_PANEL = "mainPanel";
@@ -43,32 +27,32 @@ const Timetable = ({userInfo}) => {
     useEffect(() => {
         async function fetch() {
             const student = await db.studentExists(vk_id).then(res => res);
+            setCurrentPanel(student === true ? MAIN_PANEL : SETTINGS_PANEL);
             setStudentExists(student);
-            setPopout(null);
         }
-
         fetch().then(r => r);
     }, [])
-
     return (
         <>
             {
-                studentExists == null ? <div/> :
-                    <View activePanel={studentExists === true ? MAIN_PANEL : SETTINGS_PANEL}>
+                currentPanel == null ? <div/> :
+                    <View activePanel={currentPanel}>
                         <Panel id={MAIN_PANEL}>
                             <div>
                                 <PanelHeader
                                     left={
-                                        <PanelHeaderButton>
+                                        <PanelHeaderButton onClick={(e) => {
+                                                            setCurrentPanel(SETTINGS_PANEL);
+                                                        }
+                                        }>
                                             <Icon28MenuOutline/>
                                         </PanelHeaderButton>
                                     }
                                     visor={true}
+                                    separator={false}
                                 >Расписание
                                 </PanelHeader>
-                            </div>
-                            <div>
-                                govno
+                                <TimetableRenderer vk_id={vk_id}></TimetableRenderer>
                             </div>
                         </Panel>
 
@@ -89,4 +73,4 @@ const Timetable = ({userInfo}) => {
 
     )
 }
-export default Timetable;
+export default MainPage;

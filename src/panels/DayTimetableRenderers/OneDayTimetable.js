@@ -1,29 +1,26 @@
-import React, {useEffect} from 'react';
-import {Card, CardGrid, Cell, Group, Header, SimpleCell, Text} from "@vkontakte/vkui";
-import axios from "axios";
+import {Card, CardGrid, Cell, Header, Text} from "@vkontakte/vkui";
 
 const OneDayTimetable = ({json}, ...props) => {
-    console.log("Ответ с бд", json);
     return (
         <CardGrid size={'l'} {...props}>
             <Card mode={'shadow'}>
                 <Header style={{marginLeft: '42px'}} mode={'tertiary'}>
-                    {json.day}
+                    {json.length == 0 ? 'День' : json[0].day_of_week}
                 </Header>
                 {
-                    json.table.length !== 0 ?
-                        json.table.map(x =>
+                    json.length !== 0 ?
+                        json.map(x =>
                             <Cell disabled={true}
                                   before={
                                       <div style={{minWidth: '42px', textAlign:'center'}}>
-                                          <Text weight={'medium'}>{x.start}</Text>
-                                          <Text weight={'medium'}>{x.end}</Text>
+                                          <Text weight={'medium'}>{x.pair_start}</Text>
+                                          <Text weight={'medium'}>{x.pair_end}</Text>
                                       </div>
                                   }
-                                  description={x.teacher}
-                                  after={x.classroom}
+                                  description={x.lecturer}
+                                  after={x.cabinet}
                                   multiline={true}>
-                                {x.lesson}
+                                {x.subject_name}
                             </Cell>)
                         :
                         <Cell style={{paddingLeft: '40.63px'}}

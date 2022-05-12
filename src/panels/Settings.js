@@ -1,10 +1,14 @@
 import {
     Button,
     FormItem,
-    Group, PanelHeader, PanelHeaderBack,
+    Group, Panel, PanelHeader, PanelHeaderBack,
     Select,
 } from "@vkontakte/vkui";
 import {useEffect, useState} from "react";
+
+const selectedItems = {
+    facultyId: 0, groupId: 0, subgroupId: 0, course: 0
+}
 
 const db = require('../server/database');
 
@@ -18,13 +22,9 @@ const Settings = ({vk_id, haveBackButton, exitFunc, ...props}) => {
     const [groupsFetched, setGroupsFetched] = useState(false);
     const [subgroupsFetched, setSubgroupsFetched] = useState(false);
 
-    const selectedItems = {
-        facultyId: 0, groupId: 0, subgroupId: 0
-    }
+
 
     async function fetchFaculties() {
-        setGroupsFetched(false);
-        setFacultiesFetched(false);
         const _faculties = await db.getFaculties();
         setFaculties(_faculties.map(row => ({
             label: row.faculty_name,
@@ -38,20 +38,21 @@ const Settings = ({vk_id, haveBackButton, exitFunc, ...props}) => {
     }, [])
 
     async function fetchGroups() {
-
-        await new Promise(resolve => setTimeout(resolve, 3000));
-
+        setGroupsFetched(false);
         setSubgroupsFetched(false);
-        const _groups = await db.getGroups(selectedItems.facultyId, 2);
-        setGroups(_groups.map(row => ({
-            label: row.group_name,
-            value: row.group_id
-        })));
-        setGroupsFetched(true);
+        console.log(selectedItems);
+        if (selectedItems.course !== 0 && selectedItems.facultyId !== 0){
+            console.log("Зашел");
+            const _groups = await db.getGroups(selectedItems.facultyId, selectedItems.course);
+            setGroups(_groups.map(row => ({
+                label: row.group_name,
+                value: row.group_id
+            })));
+            setGroupsFetched(true);
+        }
     }
 
     async function fetchSubgroups() {
-        await new Promise(resolve => setTimeout(resolve, 3000));
         const subgroups = await db.getSubgroups(selectedItems.groupId);
         setSubgroups(subgroups.map(row => ({
             label: row.group_name,
@@ -62,54 +63,73 @@ const Settings = ({vk_id, haveBackButton, exitFunc, ...props}) => {
     }
 
     return (
-        <>
+        <Panel>
             <PanelHeader separator={false}
                          left={haveBackButton ?
                              <PanelHeaderBack onClick={exitFunc}/> : null}
             >Настройки</PanelHeader>
 
-            <Group>
-                <div>
-                    <FormItem top={"Факультет"}>
-                        <Select id={"selectFaculty"}
-                                onChange={(e) => {
-                                    selectedItems.facultyId = e.target.value;
-                                    fetchGroups().then(r => r);
-                                }}
-                                placeholder="Не выбран"
-                                options={faculties}
-                        />
-                    </FormItem>
-
-                    <FormItem top={"Группа"}>
-                        <Select
-                            placeholder="Не выбрана"
+                <FormItem top={"Факультет"}>
+                    <Select id={"selectFaculty"}
                             onChange={(e) => {
-                                selectedItems.groupId = e.target.value;
-                                fetchSubgroups().then(r => r);
+                                selectedItems.facultyId = e.target.value;
+                                fetchGroups().then(r => r);
                             }}
-                            options={groupsFetched ? groups : []}
-                        />
-                    </FormItem>
+                            placeholder="Не выбран"
+                            options={faculties}
+                    />
+                </FormItem>
 
-                    <FormItem top={"Подгруппа"}>
-                        <Select
-                            placeholder="Не выбрана"
+                <FormItem top={"Курс"}>
+                    <Select id={"selectCourse"}
                             onChange={(e) => {
-                                selectedItems.subgroupId = e.target.value;
+                                selectedItems.course = e.target.value;
+                                fetchGroups().then(r => r);
                             }}
-                            options={subgroupsFetched ? subgroups : []}
-                        />
-                    </FormItem>
+                            placeholder="Не выбран"
+                            options={
+                                [{label: '1 курс', value: 1}, {label: '2 курс', value: 2}, {label: '3 курс', value: 3},
+                                 {label: '4 курс', value: 4}, {label: '5 курс', value: 5}]
+                            }
+                    />
+                </FormItem>
 
-                    <Button onClick={(e) => {
+                <FormItem top={"Группа"}>
+                    <Select
+                        placeholder="Не выбрана"
+                        onChange={(e) => {
+                            selectedItems.groupId = e.target.value;
+                            fetchSubgroups().then(r => r);
+                        }}
+                        options={groupsFetched ? groups : []}
+                    />
+                </FormItem>
 
-                        exitFunc();
+                <FormItem top={"Подгруппа"}>
+                    <Select
+                        placeholder="Не выбрана"
+                        onChange={(e) => {
+                            selectedItems.subgroupId = e.target.value;
+                        }}
+                        options={subgroupsFetched ? subgroups : []}
+                    />
+                </FormItem>
+
+                <FormItem>
+                    <Button stretched={false} align={'center'} onClick={(e) => {
+                        if (facultiesFetched && groupsFetched && subgroupsFetched && selectedItems.subgroupId != 0) {
+                            console.log(vk_id, selectedItems.subgroupId);
+                            db.createUser(vk_id, selectedItems.subgroupId);
+                            exitFunc();
+                        } else
+                            alert('Выберите все пункты');
                     }}>Сохранить</Button>
+                </FormItem>
 
-                </div>
-            </Group>
-        </>
+
+
+
+        </Panel>
     )
 }
 export default Settings;

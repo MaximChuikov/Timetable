@@ -1,24 +1,19 @@
 import axios from "axios";
 const url = "https://maximchuikov.demlovesky.ru/api/";
 
-async function getToday(vk_id) {
-    await axios.get(url + "getToday/" + vk_id).then((res) => {
-        return res.data;
-    }).catch((e) => {
-        console.error("ОШИБКА АКСИУС", e);
-    })
-    return null;
+function getToday(vk_id) {
+    console.log(url + "getToday/" + vk_id);
+    return axios.get(url + "getToday/" + vk_id).then((res) => res.data).catch((e) => console.log(e));
 }
-async function getTomorrow(vk_id){
-    await axios.get(url + "getDay/" + vk_id+'&1&4').then((res) => {
-        return res.data;
-    }).catch((e) => {
-        console.error("ОШИБКА АКСИУС", e);
-    })
-    return null;
+function getTomorrow(vk_id){
+    return axios.get(url + "getTomorrow/" + vk_id).then((res) => res.data).catch((e) => console.log(e));
 }
-async function createUser(vk_id, subgroup_id){
-    axios.post(`${url}createStudent/${vk_id}&${subgroup_id}`).then(r => console.log(r));
+function getTimetable(vk_id){
+    return axios.get(url + "getTimetable/" + vk_id).then((res) => res.data).catch((e) => console.log(e));
+}
+function createUser(vk_id, subgroup_id){
+    console.log(`${url}createStudent/${vk_id}&${subgroup_id}`);
+    axios.get(`${url}createStudent/${vk_id}&${subgroup_id}`).then(r => console.log(r));
 }
 function studentExists(vk_id){
     return axios.get(url + "studentExists/" + vk_id).then(res => res.data.student_exists).catch(e => console.log(e));
@@ -39,5 +34,6 @@ export {
     studentExists,
     getFaculties,
     getGroups,
-    getSubgroups
+    getSubgroups,
+    getTimetable
 }

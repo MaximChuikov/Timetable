@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import bridge from '@vkontakte/vk-bridge';
 import {ScreenSpinner, AdaptivityProvider, AppRoot, ConfigProvider, SplitLayout, Button} from '@vkontakte/vkui';
 import '@vkontakte/vkui/dist/vkui.css';
-import Timetable from './panels/Timetable';
+import MainPage from './panels/MainPage';
 const App = () => {
     const [scheme, setScheme] = useState('bright_light')
     const [fetchedUser, setUser] = useState(null);
@@ -16,19 +16,13 @@ const App = () => {
         });
 
         async function fetchData() {
-            // await bridge.send('VKWebAppGetUserInfo').then((res) => {
-            //     setUser(res);
-            //     console.log("Получил пользователя", res);
-            // }).catch((e) =>{
-            //     console.error(e);
-            // });
-            setTimeout(() => {
-                setUser({
-                    id: 12312
-                });
-                setPopout(null);
-            }, 500);
-
+            await bridge.send('VKWebAppGetUserInfo').then((res) => {
+                setUser(res);
+                console.log("Получил пользователя", res);
+            }).catch((e) =>{
+                console.error(e);
+            });
+            setPopout(null);
         }
         fetchData().then(r => r);
     }, []);
@@ -38,7 +32,7 @@ const App = () => {
             <AdaptivityProvider>
                 <AppRoot>
                     <SplitLayout popout={popout}>
-                        {fetchedUser == null ? <div/> : <Timetable userInfo={fetchedUser}/>}
+                        {fetchedUser == null ? <div/> : <MainPage userInfo={fetchedUser}/>}
                     </SplitLayout>
                 </AppRoot>
             </AdaptivityProvider>
