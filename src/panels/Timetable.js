@@ -11,8 +11,8 @@ import {
 import {
     Icon28MenuOutline
 } from '@vkontakte/icons';
-import OneDayTimetable from "./OneDayTimetable";
-import DoubleWeekTimetable from "./DoubleWeekTimetable";
+import OneDayTimetable from "./TimetableRender/OneDayTimetable";
+import DoubleWeekTimetable from "./TimetableRender/DoubleWeekTimetable";
 import Settings from "./Settings";
 
 const panels = {

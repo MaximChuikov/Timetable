@@ -9,7 +9,7 @@ import {
 import OneDayTimetable from "./OneDayTimetable";
 
 const DoubleWeekTimetable = ({panelId, currId, otherId, jsonCurrent, jsonOther, ...props}) => {
-    const db = require('../server/database');
+    const db = require('../../server/database');
     const [activeWeek, setActiveWeek] = React.useState(currId);
     const weeks = db.weeks;
 
