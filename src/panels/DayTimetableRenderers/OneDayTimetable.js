@@ -1,11 +1,14 @@
 import {Card, CardGrid, Cell, Header, Text} from "@vkontakte/vkui";
 
 const OneDayTimetable = ({json}, ...props) => {
+
+    json = json ?? [];
+
     return (
         <CardGrid size={'l'} {...props}>
             <Card mode={'shadow'}>
                 <Header style={{marginLeft: '42px'}} mode={'tertiary'}>
-                    {json.length == 0 ? 'День' : json[0].day_of_week}
+                    {json.length === 0 ? 'День' : json[0].day_of_week}
                 </Header>
                 {
                     json.length !== 0 ?
