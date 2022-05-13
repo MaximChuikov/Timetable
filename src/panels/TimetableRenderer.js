@@ -1,5 +1,6 @@
 import OneDayTimetable from "./DayTimetableRenderers/OneDayTimetable";
 import DoubleWeekTimetable from "./DayTimetableRenderers/DoubleWeekTimetable";
+import {ScreenSpinner, SplitLayout} from "@vkontakte/vkui";
 
 const {Panel, PanelHeader, Tabbar, TabbarItem, View} = require("@vkontakte/vkui");
 const {Icon28CalendarOutline} = require("@vkontakte/icons");
@@ -14,31 +15,38 @@ const TimetableRenderer = ({vk_id}) => {
     const WEEK_PANEL = 'week_panel';
 
     const [activePanel, setActivePanel] = useState(TODAY_PANEL);
-    const [popout, setPopout] = useState();
+    const spinner = <ScreenSpinner size='medium'/>;
+    const [popout, setPopout] = useState(spinner);
 
     const [todayArr, setTodayArr] = useState();
     const [tomorrowArr, setTomorrowArr] = useState();
     const [weeksArr, setWeeksArr] = useState();
 
     async function fetchToday(){
+        setPopout(spinner);
         const today = await db.getToday(vk_id);
         setTodayArr(today);
         console.log("Сегодня", today);
+        setPopout(null);
     }
     useEffect(() => {
         fetchToday().then(r => r);
     }, []);
 
     async function fetchTomorrow(){
+        setPopout(spinner);
         const tomorrow = await db.getTomorrow(vk_id);
         setTomorrowArr(tomorrow);
         console.log("Завтра", tomorrow);
+        setPopout(null);
     }
 
     async function fetchTwoWeeks(){
+        setPopout(spinner);
         const weeks = await db.getTimetable(vk_id);
         setWeeksArr(weeks);
         console.log("Недели", weeks);
+        setPopout(null);
     }
 
     return(
@@ -76,29 +84,33 @@ const TimetableRenderer = ({vk_id}) => {
             </Tabbar>
 
             {/*<Панели основного контента>*/}
-            <View activePanel={activePanel}>
-                <Panel id={TODAY_PANEL}>
-                    {
-                        todayArr === undefined ? <div/> : <OneDayTimetable json={todayArr}/>
-                    }
-                </Panel>
+            <SplitLayout popout={popout}>
 
-                <Panel id={TOMORROW_PANEL}>
-                    {
-                        tomorrowArr === undefined ? <div/> : <OneDayTimetable json={tomorrowArr}/>
-                    }
-                </Panel>
+                <View activePanel={activePanel}>
+                    <Panel id={TODAY_PANEL}>
+                        {
+                            todayArr === undefined ? <div/> : <OneDayTimetable json={todayArr}/>
+                        }
+                    </Panel>
 
-                <Panel id={WEEK_PANEL}>
-                    {
-                        weeksArr === undefined ? <div/> :
-                            <DoubleWeekTimetable otherId={"otherWeek"}
-                                                 currId={"currentWeek"}
-                                                 panelId={"weeksPanel"}
-                                                 json={weeksArr}/>
-                    }
-                </Panel>
-            </View>
+                    <Panel id={TOMORROW_PANEL}>
+                        {
+                            tomorrowArr === undefined ? <div/> : <OneDayTimetable json={tomorrowArr}/>
+                        }
+                    </Panel>
+
+                    <Panel id={WEEK_PANEL}>
+                        {
+                            weeksArr === undefined ? <div/> :
+                                <DoubleWeekTimetable otherId={"otherWeek"}
+                                                     currId={"currentWeek"}
+                                                     panelId={"weeksPanel"}
+                                                     json={weeksArr}/>
+                        }
+                    </Panel>
+                </View>
+
+            </SplitLayout>
         </div>
     )
 }
