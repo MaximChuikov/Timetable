@@ -4,7 +4,7 @@ import {ScreenSpinner, AdaptivityProvider, AppRoot, ConfigProvider, SplitLayout,
 import '@vkontakte/vkui/dist/vkui.css';
 import MainPage from './panels/MainPage';
 const App = () => {
-    const [scheme, setScheme] = useState('bright_light')
+    const [scheme, setScheme] = useState(null)
     const [fetchedUser, setUser] = useState(null);
     const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
 
@@ -16,18 +16,16 @@ const App = () => {
         });
 
         async function fetchData() {
-            await bridge.send('VKWebAppGetUserInfo').then((res) => {
-                setUser(res);
-                console.log("Получил пользователя", res);
-            }).catch((e) =>{
-                console.error(e);
-            });
+            await bridge.send('VKWebAppGetUserInfo')
+                .then((res) => setUser(res))
+                .catch((e) => console.error(e));
             setPopout(null);
         }
         fetchData().then(r => r);
     }, []);
 
     return (
+        scheme == null ? <div/> :
         <ConfigProvider scheme={scheme}>
             <AdaptivityProvider>
                 <AppRoot>

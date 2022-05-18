@@ -1,8 +1,9 @@
 import OneDayTimetable from "./DayTimetableRenderers/OneDayTimetable";
 import DoubleWeekTimetable from "./DayTimetableRenderers/DoubleWeekTimetable";
 import {ScreenSpinner, SplitLayout} from "@vkontakte/vkui";
+import {Icon28ArrowRightSquareOutline, Icon28ArticleOutline} from "@vkontakte/icons";
 
-const {Panel, PanelHeader, Tabbar, TabbarItem, View} = require("@vkontakte/vkui");
+const {Panel, Tabbar, TabbarItem, View} = require("@vkontakte/vkui");
 const {Icon28CalendarOutline} = require("@vkontakte/icons");
 const db = require('../server/database');
 const React = require("react");
@@ -57,7 +58,7 @@ const TimetableRenderer = ({vk_id}) => {
                     selected={activePanel === TODAY_PANEL}
                     onClick={() => setActivePanel(TODAY_PANEL)}
                     text="Сегодня">
-                    <Icon28CalendarOutline />
+                    <Icon28ArticleOutline/>
                 </TabbarItem>
 
                 <TabbarItem
@@ -68,7 +69,7 @@ const TimetableRenderer = ({vk_id}) => {
                         setActivePanel(TOMORROW_PANEL)
                     }}
                     text="Завтра">
-                    <Icon28CalendarOutline />
+                    <Icon28ArrowRightSquareOutline/>
                 </TabbarItem>
 
                 <TabbarItem

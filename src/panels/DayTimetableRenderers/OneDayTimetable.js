@@ -3,15 +3,20 @@ import {Card, CardGrid, Cell, Header, Text} from "@vkontakte/vkui";
 const OneDayTimetable = ({json}, ...props) => {
 
     json = json ?? [];
+    /*
+        The response can be [] of lessons or {} of day name
+     */
+    const hasPairs = json.length > 0;
+    const header = hasPairs ? json[0].day_of_week : json.day_of_week;
 
     return (
         <CardGrid size={'l'} {...props}>
             <Card mode={'shadow'}>
                 <Header style={{marginLeft: '42px'}} mode={'tertiary'}>
-                    {json.length === 0 ? 'День' : json[0].day_of_week}
+                    {header}
                 </Header>
                 {
-                    json.length !== 0 ?
+                    hasPairs ?
                         json.map(x =>
                             <Cell disabled={true}
                                   before={
