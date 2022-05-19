@@ -5,7 +5,8 @@ import {
     Panel,
     PanelHeader,
     View,
-    PanelHeaderButton, ScreenSpinner
+    PanelHeaderButton,
+    ScreenSpinner
 } from '@vkontakte/vkui';
 import {
     Icon28MenuOutline

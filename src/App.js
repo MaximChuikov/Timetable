@@ -8,13 +8,15 @@ const App = () => {
     const [fetchedUser, setUser] = useState(null);
     const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
 
-    useEffect(() => {
+    useEffect(() =>{
         bridge.subscribe(({ detail: { type, data }}) => {
             if (type === 'VKWebAppUpdateConfig') {
                 setScheme(data.scheme)
             }
         });
+    }, []);
 
+    useEffect(() => {
         async function fetchData() {
             await bridge.send('VKWebAppGetUserInfo')
                 .then((res) => setUser(res))

@@ -1,10 +1,7 @@
 import OneDayTimetable from "./DayTimetableRenderers/OneDayTimetable";
 import DoubleWeekTimetable from "./DayTimetableRenderers/DoubleWeekTimetable";
-import {ScreenSpinner, SplitLayout} from "@vkontakte/vkui";
-import {Icon28ArrowRightSquareOutline, Icon28ArticleOutline} from "@vkontakte/icons";
-
-const {Panel, Tabbar, TabbarItem, View} = require("@vkontakte/vkui");
-const {Icon28CalendarOutline} = require("@vkontakte/icons");
+import {Icon28ArrowRightSquareOutline, Icon28ArticleOutline, Icon28CalendarOutline} from "@vkontakte/icons";
+const {Panel, Tabbar, TabbarItem, View, ScreenSpinner, SplitLayout} = require("@vkontakte/vkui");
 const db = require('../server/database');
 const React = require("react");
 const {useState, useEffect} = require("react");
@@ -80,7 +77,7 @@ const TimetableRenderer = ({vk_id}) => {
                         setActivePanel(WEEK_PANEL)
                     }}
                     text="Неделя">
-                    <Icon28CalendarOutline />
+                    <Icon28CalendarOutline/>
                 </TabbarItem>
             </Tabbar>
 
