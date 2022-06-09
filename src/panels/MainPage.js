@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-
+import './DayTimetableRenderers/styles.css'
 const db = require('../server/database');
 import {
     Panel,
@@ -43,7 +43,7 @@ const MainPage = ({userInfo}) => {
                     <div>
                         <PanelHeader
                             left={
-                                <PanelHeaderButton onClick={(e) => {
+                                <PanelHeaderButton onClick={(_e) => {
                                     setCurrentPanel(SETTINGS_PANEL);
                                 }
                                 }>
@@ -52,7 +52,8 @@ const MainPage = ({userInfo}) => {
                             }
                             visor={true}
                             separator={false}
-                        >Расписание
+                        >
+                            Расписание
                         </PanelHeader>
                         <TimetableRenderer vk_id={vk_id}/>
                     </div>
