@@ -24,9 +24,8 @@ const OneDayTimetable = ({json}, ...props) => {
                                         {x.subject_name}
                                     </div>
 
-
                                     <div className={'time-container'}>
-                                        <div className={'time-container'}>
+                                        <div>
                                             {x.pair_start}
                                         </div>
                                         <div>

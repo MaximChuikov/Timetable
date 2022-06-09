@@ -3,7 +3,7 @@
 }
 .time-container div:nth-child(1){
     float: left;
-    min-width: 40px;
+    min-width: 45px;
 }
 .time-container div:nth-child(2){
     float: left;
