@@ -1,12 +1,23 @@
-.time-container{
+/*.time-container{*/
+/*    font-weight: lighter;*/
+/*}*/
+/*.time-container div:nth-child(1){*/
+/*    float: left;*/
+/*    min-width: 45px;*/
+/*}*/
+/*.time-container div:nth-child(2){*/
+/*    float: left;*/
+/*}*/
+
+.time-container {
+    display: grid;
     font-weight: lighter;
+    grid-template-columns: 55px auto;
 }
-.time-container div:nth-child(1){
-    float: left;
-    min-width: 45px;
-}
-.time-container div:nth-child(2){
-    float: left;
+
+.time-container div:nth-child(1) {
+    display: grid;
+    grid-template-columns: auto auto;
 }
 
 .vkuiSimpleCell {
@@ -14,6 +25,6 @@
     padding-top: 11px;
 }
 
-.vkuiSimpleCell__main{
+.vkuiSimpleCell__main {
     padding-top: 0 !important;
 }
