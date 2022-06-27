@@ -23,8 +23,7 @@ const DoubleWeekTimetable = ({panelId, currId, otherId, json, ...props}) => {
         Where [] - array of day lessons, {} - day name if lessons none
      */
     return (
-        <Panel {...props} id={panelId}
-               style={{paddingBottom: '16px'}}>
+        <Panel {...props} id={panelId}>
             <Tabs>
                 <TabsItem
                     onClick={() => setActiveWeek(currId)}
@@ -36,8 +35,7 @@ const DoubleWeekTimetable = ({panelId, currId, otherId, json, ...props}) => {
                 >Вторая неделя</TabsItem>
             </Tabs>
 
-            <View activePanel={activeWeek}
-                  style={{paddingBottom: '48px'}}>
+            <View activePanel={activeWeek}>
                 <Panel id={currId}>
                     {json["1"].map(x => <OneDayTimetable json={x}/>)}
                 </Panel>

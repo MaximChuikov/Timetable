@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import './DayTimetableRenderers/styles.css'
+
 const db = require('../server/database');
 import {
     Panel,
     PanelHeader,
     View,
     PanelHeaderButton,
-    ScreenSpinner
+    ScreenSpinner, Header
 } from '@vkontakte/vkui';
 import {
     Icon28MenuOutline
@@ -22,9 +23,10 @@ const MainPage = ({userInfo}) => {
 
     const MAIN_PANEL = "mainPanel";
     const SETTINGS_PANEL = "settingsPanel"
+    const WAIT_PANEL = "waitPanel"
 
     const [currentPanel, setCurrentPanel] = useState(null);
-    const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
+    const [popout, setPopout] = useState(<ScreenSpinner size='large'/>);
 
     useEffect(() => {
         async function fetch() {
@@ -33,43 +35,30 @@ const MainPage = ({userInfo}) => {
             setStudentExists(student);
             setPopout(null);
         }
+
         fetch().then(r => r);
     }, [])
     return (
-        currentPanel == null ? <div/> :
-            <View activePanel={currentPanel}
-                  popout={popout}>
-                <Panel id={MAIN_PANEL}>
-                    <div>
-                        <PanelHeader
-                            left={
-                                <PanelHeaderButton onClick={(_e) => {
-                                    setCurrentPanel(SETTINGS_PANEL);
-                                }
-                                }>
-                                    <Icon28MenuOutline/>
-                                </PanelHeaderButton>
-                            }
-                            visor={true}
-                            separator={false}
-                        >
-                            Расписание
-                        </PanelHeader>
-                        <TimetableRenderer vk_id={vk_id}/>
-                    </div>
-                </Panel>
+        <View activePanel={currentPanel ?? WAIT_PANEL}
+              popout={popout}>
+            <Panel id={WAIT_PANEL}/>
+            <Panel id={MAIN_PANEL}>
+                <div>
+                    <TimetableRenderer vk_id={vk_id} viewWidth={'100%'}/>
+                </div>
 
+            </Panel>
 
-                <Panel id={SETTINGS_PANEL}>
-                    <Settings vk_id={vk_id}
-                              haveBackButton={studentExists}
-                              exitFunc={() => {
-                                  setStudentExists(true);
-                                  setCurrentPanel(MAIN_PANEL);
-                              }}
-                    />
-                </Panel>
-            </View>
+            <Panel id={SETTINGS_PANEL}>
+                <Settings vk_id={vk_id}
+                          haveBackButton={studentExists}
+                          exitFunc={() => {
+                              setStudentExists(true);
+                              setCurrentPanel(MAIN_PANEL);
+                          }}
+                />
+            </Panel>
+        </View>
     )
 }
 export default MainPage;

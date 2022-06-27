@@ -1,14 +1,3 @@
-/*.time-container{*/
-/*    font-weight: lighter;*/
-/*}*/
-/*.time-container div:nth-child(1){*/
-/*    float: left;*/
-/*    min-width: 45px;*/
-/*}*/
-/*.time-container div:nth-child(2){*/
-/*    float: left;*/
-/*}*/
-
 .time-container {
     display: grid;
     font-weight: lighter;
@@ -20,6 +9,7 @@
     grid-template-columns: auto auto;
 }
 
+
 .vkuiSimpleCell {
     align-items: flex-start;
     padding-top: 11px;
@@ -27,4 +17,8 @@
 
 .vkuiSimpleCell__main {
     padding-top: 0 !important;
+}
+
+Panel{
+    padding-bottom: 0;
 }

@@ -24,7 +24,8 @@ const OneDayTimetable = ({json}, ...props) => {
                                         {x.subject_name}
                                     </div>
 
-                                    <div aria-multiline={true} className={'time-container'}>
+                                    <div aria-multiline={true}
+                                         className={'time-container'}>
                                         <div>
                                             <div>
                                                 {x.pair_start}
