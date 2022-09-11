@@ -3,48 +3,54 @@ import DoubleWeekTimetable from "./DayTimetableRenderers/DoubleWeekTimetable";
 import {Icon28ArrowRightSquareOutline, Icon28ArticleOutline, Icon28CalendarOutline} from "@vkontakte/icons";
 const {Panel, Tabbar, TabbarItem, View, ScreenSpinner, SplitLayout} = require("@vkontakte/vkui");
 const db = require('../server/database');
+
+const doomy_db = require('../server/doomy-db')
+
 const React = require("react");
 const {useState, useEffect} = require("react");
 
-const TimetableRenderer = ({vk_id}) => {
+const TimetableRenderer = (/*{vk_id}*/) => {
 
     const TODAY_PANEL = 'today_panel';
     const TOMORROW_PANEL = 'tomorrow_panel';
     const WEEK_PANEL = 'week_panel';
 
     const [activePanel, setActivePanel] = useState(TODAY_PANEL);
-    const spinner = <ScreenSpinner size='medium'/>;
-    const [popout, setPopout] = useState(spinner);
+    // const spinner = <ScreenSpinner size='medium'/>;
+    // const [popout, setPopout] = useState(spinner);
 
     const [todayArr, setTodayArr] = useState();
     const [tomorrowArr, setTomorrowArr] = useState();
     const [weeksArr, setWeeksArr] = useState();
 
     async function fetchToday(){
-        setPopout(spinner);
-        const today = await db.getToday(vk_id);
+        // setPopout(spinner);
+        //const today = await db.getToday(vk_id);
+        const today = doomy_db.getDay(doomy_db.days.today);
         setTodayArr(today);
         console.log("Сегодня", today);
-        setPopout(null);
+        // setPopout(null);
     }
     useEffect(() => {
         fetchToday().then(r => r);
     }, []);
 
     async function fetchTomorrow(){
-        setPopout(spinner);
-        const tomorrow = await db.getTomorrow(vk_id);
+        // setPopout(spinner);
+        //const tomorrow = await db.getTomorrow(vk_id);
+        const tomorrow = doomy_db.getDay(doomy_db.days.tomorrow);
         setTomorrowArr(tomorrow);
         console.log("Завтра", tomorrow);
-        setPopout(null);
+        // setPopout(null);
     }
 
     async function fetchTwoWeeks(){
-        setPopout(spinner);
-        const weeks = await db.getTimetable(vk_id);
+        // setPopout(spinner);
+        //const weeks = await db.getTimetable(vk_id);
+        const weeks = doomy_db.getWeek(doomy_db.weeks.currentWeek);
         setWeeksArr(weeks);
         console.log("Недели", weeks);
-        setPopout(null);
+        // setPopout(null);
     }
 
     return(
@@ -82,7 +88,7 @@ const TimetableRenderer = ({vk_id}) => {
             </Tabbar>
 
             {/*<Панели основного контента>*/}
-            <SplitLayout popout={popout}>
+            <SplitLayout>
 
                 <View activePanel={activePanel}>
                     <Panel id={TODAY_PANEL}>

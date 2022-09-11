@@ -1,41 +1,95 @@
-import axios from "axios";
-const url = "https://maximchuikov.demlovesky.ru/api/";
+import timeTable from './Weeks.json';
+import bells from './bells.json';
 
-function studentExists(vk_id){
-    console.log(url + "studentExists/" + vk_id)
-    return axios.get(url + "studentExists/" + vk_id).then(res => res.data.student_exists).catch(e => console.log(e));
+const days = {
+    today: "Today",
+    tomorrow: "Tomorrow",
 }
-function getToday(vk_id) {
-    console.log(url + "getToday/" + vk_id);
-    return axios.get(url + "getToday/" + vk_id).then((res) => res.data).catch((e) => console.log(e));
-}
-function getTomorrow(vk_id){
-    return axios.get(url + "getTomorrow/" + vk_id).then((res) => res.data).catch((e) => console.log(e));
-}
-function getTimetable(vk_id){
-    return axios.get(url + "getTimetable/" + vk_id).then((res) => res.data).catch((e) => console.log(e));
-}
-function createUser(vk_id, subgroup_id){
-    console.log(`${url}createStudent/${vk_id}&${subgroup_id}`);
-    axios.get(`${url}createStudent/${vk_id}&${subgroup_id}`).then(r => console.log(r));
-}
-function getFaculties(){
-    return axios.get(url + "getFaculties").then(res => res.data).catch(e => console.log(e));
-}
-function getGroups(faculty_id, course){
-    return axios.get(`${url}getGroups/${faculty_id}&${course}`).then(res => res.data).catch(e => console.log(e));
-}
-function getSubgroups(group_id){
-    return axios.get(url + "getSubgroups/" + group_id).then(res => res.data).catch(e => console.log(e));
+const weeks = {
+    currentWeek: "CurrentWeek",
+    otherWeek: "OtherWeek"
 }
 
+const daysOfWeek = [
+    'Понедельник',
+    'Вторник',
+    'Среда',
+    'Четверг',
+    'Пятница',
+    'Суббота',
+    'Воскресенье'
+]
+
+const getWeekTable = (week) => week == 1 ? timeTable.firstWeek : timeTable.secondWeek;
+const weekAfter = (day) => Math.floor(((day + 3) / 7 + new Date().getTime() / 604800000) % 2);
+const getWeekNumber = (week) => week == weeks.currentWeek ? weekAfter(0) + 1 : weekAfter(7) + 1;
+
+function todayDay (){
+    const dayFromSunday = new Date().getDay();
+    return dayFromSunday - 1 == -1 ? 6 : dayFromSunday - 1;
+}
+
+function replaceTime(pair){
+    try{
+        pair.start = bells.bells[pair.pair - 1].start;
+        pair.end = bells.bells[pair.pair - 1].end;
+    } catch (e){
+        console.log(e);
+    }
+    return pair;
+}
+function replacePairBell(dayJson){
+    return dayJson.map(t => replaceTime(t));
+}
+
+
+
+function getDay(day){
+    switch (day){
+        case days.today:
+            return {
+                table: replacePairBell(getWeekTable(weekAfter(0))[todayDay()]),
+                day: daysOfWeek[todayDay()]
+            };
+        case days.tomorrow:
+            return {
+                table: replacePairBell(getWeekTable(weekAfter(1))[(todayDay() + 1) % 7]),
+                day: daysOfWeek[(todayDay() + 1) % 7]
+            };
+
+        default:
+            console.log("Error in switch getDAY with \"" + day + "\" value");
+            return replacePairBell(getWeekTable(weekAfter(0))[todayDay()]);
+    }
+}
+
+function mergeWeekDays(weekTable){
+    const arr = [daysOfWeek.length];
+    for (let i = 0; i < daysOfWeek.length; i++){
+        arr[i] = {
+            table: replacePairBell(weekTable[i]),
+            day: daysOfWeek[i]
+        }
+    }
+    return arr;
+}
+
+function getWeek(week){
+    switch (week){
+        case weeks.currentWeek:
+            return mergeWeekDays(getWeekTable(weekAfter(0)));
+        case weeks.otherWeek:
+            return mergeWeekDays(getWeekTable(weekAfter(7)));
+
+        default:
+            console.log("Error in switch getWeek with \"" + week + "\" value");
+            return mergeWeekDays(getWeekTable(weekAfter(0)));
+    }
+}
 export {
-    getToday,
-    getTomorrow,
-    createUser,
-    studentExists,
-    getFaculties,
-    getGroups,
-    getSubgroups,
-    getTimetable
+    days,
+    weeks,
+    getWeekNumber,
+    getDay,
+    getWeek
 }

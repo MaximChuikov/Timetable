@@ -7,31 +7,26 @@ import MainPage from './panels/MainPage';
 import './panels/DayTimetableRenderers/styles.css'
 
 const App = () => {
-    const [scheme, setScheme] = useState('client_light')
-    const [fetchedUser, setUser] = useState(null);
-    const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
+    // const [fetchedUser, setUser] = useState(null);
+    // const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
 
-    useEffect(() =>{
-        bridge.subscribe(({ detail: { type, data }}) => {
-            if (type === 'VKWebAppUpdateConfig') {
-                 setScheme(data.scheme ?? 'client_light');
-            }
-        });
-        async function fetchData() {
-            await bridge.send('VKWebAppGetUserInfo')
-                .then((res) => setUser(res))
-                .catch((e) => console.error(e));
-            setPopout(null);
-        }
-        fetchData().then(r => r);
-    }, []);
+    // useEffect(() =>{
+    //     async function fetchData() {
+    //         await bridge.send('VKWebAppGetUserInfo')
+    //             .then((res) => setUser(res))
+    //             .catch((e) => console.error(e));
+    //         setPopout(null);
+    //     }
+    //     fetchData().then(r => r);
+    // }, []);
 
     return (
-        <ConfigProvider scheme={scheme}>
+        <ConfigProvider scheme='client_dark'>
             <AdaptivityProvider>
                 <AppRoot>
-                    <SplitLayout popout={popout}>
-                        {fetchedUser == null ? <div/> : <MainPage userInfo={fetchedUser}/>}
+                    <SplitLayout>
+                        {/*{fetchedUser == null ? <div/> : <MainPage userInfo={fetchedUser}/>}*/}
+                        <MainPage/>
                     </SplitLayout>
                 </AppRoot>
             </AdaptivityProvider>

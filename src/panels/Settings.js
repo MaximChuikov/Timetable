@@ -40,9 +40,7 @@ const Settings = ({vk_id, haveBackButton, exitFunc, ...props}) => {
     async function fetchGroups() {
         setGroupsFetched(false);
         setSubgroupsFetched(false);
-        console.log(selectedItems);
         if (selectedItems.course !== 0 && selectedItems.facultyId !== 0){
-            console.log("Зашел");
             const _groups = await db.getGroups(selectedItems.facultyId, selectedItems.course);
             setGroups(_groups.map(row => ({
                 label: row.group_name,

@@ -4,7 +4,7 @@ const OneDayTimetable = ({json}, ...props) => {
 
     json = json ?? [];
     const hasPairs = json.length > 0;
-    const header = hasPairs ? json[0].day_of_week : json.day_of_week;
+    const header = json.day;
 
     return (
         <CardGrid size={'l'} {...props}>
@@ -16,12 +16,12 @@ const OneDayTimetable = ({json}, ...props) => {
                     hasPairs ?
                         json.map(x =>
                             <Cell disabled={true}
-                                  description={x.lecturer}
-                                  after={x.cabinet}
+                                  description={x.teacher}
+                                  after={x.classroom}
                                   multiline={true}>
                                 <div style={{display: 'block'}}>
                                     <div>
-                                        {x.subject_name}
+                                        {x.lesson}
                                     </div>
 
                                     <div aria-multiline={true} className={'time-container'}>
