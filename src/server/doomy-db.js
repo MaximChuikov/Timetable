@@ -36,54 +36,39 @@ const weeks = {
     otherWeek: "OtherWeek"
 }
 
+function todayWeek() {
+    const week = Math.floor(((7 - 4) / 7 + new Date().getTime() / 604800000) % 2) + 1;
+    return week === 1 ? "firstWeek" : week === 2 ? "secondWeek" : ""
+}
 
+function tomorrowWeek() {
+    const week =  Math.floor(((8 - 4) / 7 + new Date().getTime() / 604800000) % 2) + 1;
+    return week === 1 ? "firstWeek" : week === 2 ? "secondWeek" : ""
+}
 
-const getWeekTable = (week) => week == 1 ? timeTable.secondWeek : timeTable.firstWeek;
-const weekAfter = (day) => Math.floor(((day + 3) / 7 + new Date().getTime() / 604800000) % 2);
-const getWeekNumber = (week) => week == weeks.currentWeek ? weekAfter(0) + 1 : weekAfter(7) + 1;
+function today() {
+    return new Date().getDay() === 0 ? 7 : new Date().getDay();
+}
 
-function todayDay (){
-    const dayFromSunday = new Date().getDay();
-    return dayFromSunday - 1 === -1 ? 6 : dayFromSunday - 1;
+function tomorrow() {
+    return new Date().getDay() === 0 ? 1 : new Date().getDay() + 1;
 }
 
 function getDay(day){
     switch (day){
         case days.today:
-            return getWeekTable(weekAfter(0))[todayDay()]
+            return timeTable[todayWeek()][today()]
         case days.tomorrow:
-            return getWeekTable(weekAfter(1))[(todayDay() + 1) % 7]
+            return timeTable[tomorrowWeek()][tomorrow()]
     }
-}
-
-function mergeWeekDays(weekTable){
-    const arr = [daysOfWeek.length];
-    for (let i = 0; i < daysOfWeek.length; i++){
-        arr[i] = {
-            table: weekTable[i],
-            day: daysOfWeek[i]
-        }
-    }
-    return arr;
 }
 
 function getWeek(){
     return timeTable
-    // switch (week){
-    //     case weeks.currentWeek:
-    //         return mergeWeekDays(getWeekTable(weekAfter(0)));
-    //     case weeks.otherWeek:
-    //         return mergeWeekDays(getWeekTable(weekAfter(7)));
-    //
-    //     default:
-    //         console.log("Error in switch getWeek with \"" + week + "\" value");
-    //         return mergeWeekDays(getWeekTable(weekAfter(0)));
-    // }
 }
 export {
     days,
     weeks,
-    getWeekNumber,
     getDay,
     getWeek
 }
